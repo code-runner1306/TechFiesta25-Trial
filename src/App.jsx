@@ -7,7 +7,7 @@ import IncidentReportForm from "./pages/IncidentReportForm";
 import UserDashboard from "./pages/UserDashboard";
 import { IncidentsProvider } from "./context/IncidentsContext";
 import AdminDashboard from "./pages/AdminDashboard";
-import VoiceInput from "./components/VoiceToText";
+
 
 const App = () => {
   return (
@@ -15,7 +15,7 @@ const App = () => {
       <IncidentsProvider>
         <BrowserRouter>
           <Navbar />
-          <VoiceInput/>
+         
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/report-incident" element={<IncidentReportForm />} />
