@@ -18,6 +18,10 @@ const HeatMapLayer = ({ data }) => {
         0.6: "rgba(255, 0, 0, 1.0)", // Orange (Medium-high severity)
         1.0: "rgba(255, 0, 0, 1.0)", // Red (High severity)
       },
+      max: 2.0, // Increase this value to allow higher intensity levels
+      minOpacity: 0.2, // Make lower intensity points more visible
+      maxOpacity: 0.8, // Fully opaque for high-intensity points
+      scaleRadius: true,
     }).addTo(map);
 
     return () => {
