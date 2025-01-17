@@ -59,8 +59,17 @@ const IncidentReportForm = () => {
       file: file ? file.name : "No file uploaded",
     };
 
+    // Save to localStorage
+    let incidents = JSON.parse(localStorage.getItem("incidents")) || [];
+    incidents.push({
+      location: formData.location, // store the incident location
+      severity: formData.severity,
+    });
+    localStorage.setItem("incidents", JSON.stringify(incidents));
+
     console.log("Reported Incident:", submittedData);
     alert("Incident reported successfully!");
+
     setFormData({
       incidentType: "",
       customIncidentType: "",
