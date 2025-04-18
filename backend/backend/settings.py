@@ -75,7 +75,9 @@ SIMPLE_JWT = {
     'AUTH_HEADER_TYPES': ('Bearer',),
 }
 
-CORS_ALLOWED_ORIGINS = os.getenv('CORS_ALLOWED_ORIGINS', '').split(',')
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",  # Or your frontend's domain
+]
 
 
 WEBPUSH_SETTINGS = {
