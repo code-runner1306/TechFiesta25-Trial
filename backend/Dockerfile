@@ -35,4 +35,4 @@ USER appuser
 EXPOSE 8000
 
 # Increase timeout and use 2 workers
-CMD ["sh", "-c", "exec gunicorn backend.wsgi --bind=0.0.0.0:$PORT --workers=2 --timeout=120"]
+CMD ["sh", "-c", "exec gunicorn backend.wsgi --bind=0.0.0.0:${PORT} --workers=2 --timeout=120"]
