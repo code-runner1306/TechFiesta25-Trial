@@ -45,7 +45,12 @@ EXPOSE 8000
 RUN echo '#!/bin/sh\n\
 python manage.py makemigrations\n\
 python manage.py migrate\n\
-python manage.py createsuperuser --noinput --email "${DJANGO_SUPERUSER_EMAIL}" || true\n\
+python manage.py shell -c "\
+from django.contrib.auth import get_user_model; \
+User = get_user_model(); \
+email = \"${DJANGO_SUPERUSER_EMAIL}\"; \
+password = \"${DJANGO_SUPERUSER_PASSWORD}\"; \
+User.objects.filter(email=email).exists() or User.objects.create_superuser(email=email, password=password)"\n\
 exec gunicorn backend.wsgi --bind=0.0.0.0:${PORT} --workers=2 --timeout=120\n\
 ' > /app/entrypoint.sh && \
     chmod +x /app/entrypoint.sh
