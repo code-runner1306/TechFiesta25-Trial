@@ -5,6 +5,8 @@ FROM python:${PYTHON_VERSION}-slim AS base
 
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
+ENV DJANGO_SUPERUSER_EMAIL=hello@gmail.com
+ENV DJANGO_SUPERUSER_PASSWORD=helloworld
 
 WORKDIR /app
 
@@ -41,6 +43,7 @@ EXPOSE 8000
 RUN echo '#!/bin/sh\n\
 python manage.py makemigrations\n\
 python manage.py migrate\n\
+python manage.py createsuperuser --noinput --email "${DJANGO_SUPERUSER_EMAIL}" || true\n\
 exec gunicorn backend.wsgi --bind=0.0.0.0:${PORT} --workers=2 --timeout=120\n\
 ' > /app/entrypoint.sh && \
     chmod +x /app/entrypoint.sh
