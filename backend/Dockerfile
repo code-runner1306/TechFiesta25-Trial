@@ -35,6 +35,8 @@ COPY . .
 # Change ownership of the app directory to appuser
 RUN chown -R appuser:appuser /app
 
+RUN python manage.py collectstatic --noinput
+
 USER appuser
 
 EXPOSE 8000
