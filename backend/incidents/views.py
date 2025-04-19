@@ -84,12 +84,14 @@ class SignUpView(APIView):
 
         # Save user
         try:
+            print("creating user")
             user = User.objects.create(
                 first_name=data["firstName"],
                 last_name=data["lastName"],
                 email=data["email"],  # Use email as username
                 password=make_password(data["password"])  # Hash the password
             )
+            print("user created")
 
             # Add custom fields if you're using a custom User model
             user.phone_number = data["phoneNumber"]
