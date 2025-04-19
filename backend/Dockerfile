@@ -5,17 +5,18 @@ FROM python:${PYTHON_VERSION}-slim AS base
 
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
+ENV PORT=10000
 ENV DJANGO_SUPERUSER_EMAIL=hello@gmail.com
 ENV DJANGO_SUPERUSER_PASSWORD=helloworld
 
 WORKDIR /app
 
-# Install system dependencies first (if needed)
+# Install system dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy requirements first to leverage Docker cache
+# Install Python dependencies
 COPY requirements.txt .
 RUN --mount=type=cache,target=/root/.cache/pip \
     pip install --no-cache-dir -r requirements.txt
@@ -32,26 +33,26 @@ RUN adduser \
 # Copy application code
 COPY . .
 
-# Change ownership of the app directory to appuser
+# Set permissions
 RUN chown -R appuser:appuser /app
-
-USER appuser
-
-EXPOSE 8000
 
 # Create entrypoint script
 RUN echo '#!/bin/sh\n\
-RUN python manage.py collectstatic --noinput\n\
+python manage.py collectstatic --noinput\n\
 python manage.py makemigrations\n\
 python manage.py migrate\n\
 python manage.py shell -c "\
 from django.contrib.auth import get_user_model; \
 User = get_user_model(); \
-email = \"${DJANGO_SUPERUSER_EMAIL}\"; \
-password = \"${DJANGO_SUPERUSER_PASSWORD}\"; \
+email = \"$DJANGO_SUPERUSER_EMAIL\"; \
+password = \"$DJANGO_SUPERUSER_PASSWORD\"; \
 User.objects.filter(email=email).exists() or User.objects.create_superuser(email=email, password=password)"\n\
-exec gunicorn backend.wsgi --bind=0.0.0.0:${PORT} --workers=2 --timeout=120\n\
+exec gunicorn backend.wsgi:application --bind 0.0.0.0:$PORT --workers 4 --timeout 120\n\
 ' > /app/entrypoint.sh && \
     chmod +x /app/entrypoint.sh
+
+USER appuser
+
+EXPOSE $PORT
 
 CMD ["sh", "/app/entrypoint.sh"]
