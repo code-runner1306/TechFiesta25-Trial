@@ -89,16 +89,17 @@ class SignUpView(APIView):
                 first_name=data["firstName"],
                 last_name=data["lastName"],
                 email=data["email"],  # Use email as username
-                password=make_password(data["password"])  # Hash the password
+                password=make_password(data["password"]),  # Hash the password
+                phone_number = data["phoneNumber"],
+                address = data["address"],
+                aadhar_number = data["aadharNumber"],
+                emergency_contact1 = data["emergencyContact1"],
+                emergency_contact2 = data["emergencyContact2"],
             )
             print("user created")
 
             # Add custom fields if you're using a custom User model
-            user.phone_number = data["phoneNumber"]
-            user.address = data["address"]
-            user.aadhar_number = data["aadharNumber"]
-            user.emergency_contact1 = data["emergencyContact1"]
-            user.emergency_contact2 = data["emergencyContact2"]
+            
             user.save()
 
             return Response({"message": "User created successfully"}, status=status.HTTP_201_CREATED)
