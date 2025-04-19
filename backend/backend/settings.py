@@ -77,6 +77,7 @@ SIMPLE_JWT = {
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",  # Or your frontend's domain
+    "https://bharat-secure.vercel.app",
 ]
 
 
