@@ -30,10 +30,14 @@ RUN adduser \
 # Copy application code
 COPY . .
 
+# Change ownership of the app directory to appuser
+RUN chown -R appuser:appuser /app
+
 USER appuser
 
 EXPOSE 8000
 
+# Create entrypoint script
 RUN echo '#!/bin/sh\n\
 python manage.py makemigrations\n\
 python manage.py migrate\n\
@@ -41,5 +45,4 @@ exec gunicorn backend.wsgi --bind=0.0.0.0:${PORT} --workers=2 --timeout=120\n\
 ' > /app/entrypoint.sh && \
     chmod +x /app/entrypoint.sh
 
-# Increase timeout and use 2 workers
-CMD ["sh", "-c", "exec gunicorn backend.wsgi --bind=0.0.0.0:${PORT} --workers=2 --timeout=120"]
+CMD ["sh", "/app/entrypoint.sh"]
