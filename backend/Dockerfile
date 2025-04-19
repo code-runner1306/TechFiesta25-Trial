@@ -35,14 +35,13 @@ COPY . .
 # Change ownership of the app directory to appuser
 RUN chown -R appuser:appuser /app
 
-RUN python manage.py collectstatic --noinput
-
 USER appuser
 
 EXPOSE 8000
 
 # Create entrypoint script
 RUN echo '#!/bin/sh\n\
+RUN python manage.py collectstatic --noinput\n\
 python manage.py makemigrations\n\
 python manage.py migrate\n\
 python manage.py shell -c "\
